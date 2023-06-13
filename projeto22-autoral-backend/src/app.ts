@@ -2,10 +2,15 @@ import express, { Express } from "express";
 import cors from "cors";
 
 import { connectDb, disconnectDB } from "./config/database";
+import { authRouter } from "./routes";
 
 const app = express();
 
-app.use(cors());
+app
+  .use(cors())
+  .use(express.json())
+  .get("/health", (_req, res) => res.send("OK!"))
+  .use("/auth", authRouter);
 
 export function init(): Promise<Express> {
   connectDb();
