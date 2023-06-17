@@ -10,8 +10,8 @@ export default function Home() {
     <div className="flex flex-col mt-36">
       <Navbar />
       <Carousel />
-      <ProdSelection />
-      <ProdSelection />
+      <ProdSelection title="Mais Vendidos" />
+      <ProdSelection title="Veja também" />
       <Footer />
     </div>
   );
