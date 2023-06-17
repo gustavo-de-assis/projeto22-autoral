@@ -19,7 +19,7 @@ export default function Navbar() {
     }, []) */
   return (
     <>
-      <nav className="flex-between w-full">
+      <nav className="flex-between w-full fixed top-0 z-10">
         <div className="flex flex-row justify-end w-full bg-san-marino-500 h-6 gap-2 font-rajdhani text-white px-4">
           <p> Logout </p>
           <p>|</p>

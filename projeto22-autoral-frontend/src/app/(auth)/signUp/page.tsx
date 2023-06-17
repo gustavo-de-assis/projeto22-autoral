@@ -15,7 +15,7 @@ export default function SignUp() {
         <h1 className="mt-20 text-5xl ">Cadastro</h1>
         <form className="mt-20 mb-10 flex flex-col gap-4">
           <p className="text-xs">Email</p>
-          <input className="h-12 rounded bg-botticelli-100" />
+          <input className="h-12 rounded bg-botticelli-100" type="email" />
           <p className="text-xs">Senha</p>
           <input className="h-12 rounded bg-botticelli-100" />
           <p className="text-xs">Repita sua senha</p>
