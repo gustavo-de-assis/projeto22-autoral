@@ -23,6 +23,9 @@ export async function getProduct(req: Request, res: Response) {
 
     res.status(httpStatus.OK).send(product);
   } catch (error) {
+    if (error.name === "NotFoundError") {
+      res.sendStatus(httpStatus.NOT_FOUND);
+    }
     res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
