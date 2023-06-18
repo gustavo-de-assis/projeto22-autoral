@@ -19,6 +19,9 @@
   },
   "author": "",
   "license": "ISC",
+  "prisma": {
+    "seed": "npm run dev:load-envs -- ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^3.14.0",
     "@types/axios": "^0.14.0",
