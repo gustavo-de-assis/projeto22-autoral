@@ -29,38 +29,43 @@ export default function Login() {
   return (
     <div className="flex flex-row bg-hint-of-red-50">
       <div className="h-screen bg-blue-zodiac-950 text-hint-of-red-50 w-screen"></div>
-      <div className="flex flex-col items-center w-[680px]">
-        <h1 className="mt-20 text-5xl ">Login</h1>
-        <form className="mt-20 mb-10 flex flex-col gap-4" onSubmit={loginUser}>
-          <p className="text-xs">Email</p>
-          <input
-            className="h-12 rounded bg-botticelli-100"
-            type="email"
-            value={loginInfo.email}
-            onChange={(e) => {
-              setLoginInfo({
-                ...loginInfo,
-                email: e.target.value,
-              });
-            }}
-            required
-          />
-          <p className="text-xs">Senha</p>
-          <input
-            className="h-12 rounded bg-botticelli-100"
-            type="password"
-            value={loginInfo.password}
-            onChange={(e) => {
-              setLoginInfo({
-                ...loginInfo,
-                password: e.target.value,
-              });
-            }}
-            required
-          />
-          <p className="text-xs text-right">Esqueceu a senha?</p>
+      <div className="flex flex-col items-center w-[700px]">
+        <h1 className="mt-20 text-7xl font-medium">Login</h1>
+        <form className="mt-16 mb-10 flex flex-col gap-4" onSubmit={loginUser}>
+          <div className=" relative mb-3">
+            <p className="text-sm z-1 bottom-10 absolute px-1">Email</p>
+            <input
+              className="h-12 rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
+              type="email"
+              value={loginInfo.email}
+              onChange={(e) => {
+                setLoginInfo({
+                  ...loginInfo,
+                  email: e.target.value,
+                });
+              }}
+              required
+            />
+          </div>
+
+          <div className="relative">
+            <p className="text-sm absolute z-1 bottom-10 px-1">Senha</p>
+            <input
+              className="h-12 rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
+              type="password"
+              value={loginInfo.password}
+              onChange={(e) => {
+                setLoginInfo({
+                  ...loginInfo,
+                  password: e.target.value,
+                });
+              }}
+              required
+            />
+          </div>
+          <p className="text-sm text-right">Esqueceu a senha?</p>
           <button
-            className="h-12 rounded bg-san-marino-500 text-hint-of-red-50 font-regular text-2xl"
+            className="h-12 rounded bg-san-marino-500 text-hint-of-red-50 font-semibold text-3xl hover:bg-san-marino-600"
             type="submit"
           >
             ENTRAR
@@ -68,7 +73,7 @@ export default function Login() {
         </form>
         <div className="flex flex-row gap-2">
           <p>Não possui conta?</p>
-          <a href="/signUp" className="underline">
+          <a href="/signUp" className="hover:underline">
             Cadastre-se!
           </a>
         </div>
