@@ -78,6 +78,7 @@ model products {
   id          Int           @id @default(autoincrement())
   name        String        @db.VarChar(255)
   price       Int
+  stock       Int
   color_id    Int?
   size_id     Int?
   model_id    Int?
@@ -88,18 +89,10 @@ model products {
   order_items order_items[]
   categories  categories?   @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_category")
   colors      colors?       @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_color")
-  types       types?        @relation(fields: [model_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_model")
   sizes       sizes?        @relation(fields: [size_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_size")
 }
 
 model sizes {
-  id         Int        @id @default(autoincrement())
-  name       String     @db.VarChar(255)
-  created_at DateTime?  @default(now()) @db.Timestamp(6)
-  products   products[]
-}
-
-model types {
   id         Int        @id @default(autoincrement())
   name       String     @db.VarChar(255)
   created_at DateTime?  @default(now()) @db.Timestamp(6)
