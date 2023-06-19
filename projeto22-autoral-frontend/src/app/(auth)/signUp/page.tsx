@@ -1,4 +1,14 @@
-export default function Login() {
+"use client";
+
+import { useState } from "react";
+
+export default function SignUp() {
+  const [signUpInfo, setSignUpInfo] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   return (
     <div className="flex flex-row bg-hint-of-red-50">
       <div className="flex flex-col items-center w-[680px]">
