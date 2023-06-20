@@ -1,6 +1,7 @@
 "use client";
 
 import axios from "axios";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Login() {
@@ -28,8 +29,17 @@ export default function Login() {
 
   return (
     <div className="flex flex-row bg-hint-of-red-50">
-      <div className="h-screen bg-blue-zodiac-950 text-hint-of-red-50 w-screen"></div>
-      <div className="flex flex-col items-center w-[700px]">
+      <div className="w-screen h-screen relative">
+        <Image
+          src={"/assets/banner.jpg"}
+          alt="banner"
+          fill
+          className="absolute overflow-hidden inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-zodiac-950"></div>
+      </div>
+
+      <div className="flex flex-col fixed right-0 bg-hint-of-red-50 items-center w-3/12 h-full z-10">
         <h1 className="mt-20 text-7xl font-medium">Login</h1>
         <form className="mt-16 mb-10 flex flex-col gap-4" onSubmit={loginUser}>
           <div className=" relative mb-3">
