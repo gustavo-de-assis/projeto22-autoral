@@ -1,8 +1,8 @@
-import { ApplicationError } from '@/protocols';
+import { ApplicationError } from "@/protocols";
 
-export function forBiddenError(): ApplicationError {
+export function forbiddenError(): ApplicationError {
   return {
-    name: 'ForBiddenError',
-    message: 'Forbidden Error!',
+    name: "ForbiddenError",
+    message: "Forbidden Error!",
   };
 }
