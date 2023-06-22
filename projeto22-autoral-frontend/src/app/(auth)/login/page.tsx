@@ -39,7 +39,7 @@ export default function Login() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-zodiac-950"></div>
       </div>
 
-      <div className="flex flex-col fixed right-0 bg-hint-of-red-50 items-center w-3/12 h-full z-10">
+      <div className="flex flex-col fixed right-0 bg-hint-of-red-50 items-center w-[400px] h-full z-10">
         <h1 className="mt-20 text-7xl font-medium">Login</h1>
         <form className="mt-16 mb-10 flex flex-col gap-4" onSubmit={loginUser}>
           <div className=" relative mb-3">
@@ -73,7 +73,7 @@ export default function Login() {
               required
             />
           </div>
-          <p className="text-sm text-right">Esqueceu a senha?</p>
+          <p className="text-sm text-right font-medium">Esqueceu a senha?</p>
           <button
             className="h-12 rounded bg-san-marino-500 text-hint-of-red-50 font-semibold text-3xl hover:bg-san-marino-600"
             type="submit"
@@ -83,7 +83,7 @@ export default function Login() {
         </form>
         <div className="flex flex-row gap-2">
           <p>Não possui conta?</p>
-          <a href="/signUp" className="hover:underline">
+          <a href="/signUp" className="hover:underline font-medium">
             Cadastre-se!
           </a>
         </div>
