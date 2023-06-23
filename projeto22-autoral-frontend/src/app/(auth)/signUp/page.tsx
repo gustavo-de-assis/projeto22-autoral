@@ -2,10 +2,12 @@
 
 import axios from "axios";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignUp() {
   const [singConfirm, setSignConfirm] = useState(false);
+  const router = useRouter();
   const [signUpInfo, setSignUpInfo] = useState({
     name: "",
     email: "",
@@ -18,7 +20,7 @@ export default function SignUp() {
 
     const { confirmPassword, ...body } = signUpInfo;
     if (body.password !== confirmPassword) {
-      alert("As senhas não combinam!");
+      alert("As senhas não coincidem!");
       return;
     }
 
@@ -29,14 +31,15 @@ export default function SignUp() {
       .then((res) => {
         console.log(res.status);
         alert("Cadastro realizado com sucesso!");
+        router.push("/login");
       })
       .catch((err) => {
-        if (err.response.status === 409) {
+        console.log(err);
+        if (err && err.response.status === 409) {
           alert("Este email já está sendo utilizado!");
         } else {
           alert("Não foi possível realizar o cadastro!");
         }
-        console.log(err.response.message);
       });
   }
 
