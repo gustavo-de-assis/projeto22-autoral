@@ -2,29 +2,19 @@
 
 import axios from "axios";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/app/Context/AuthContext";
 
 export default function Login() {
   const [loginInfo, setLoginInfo] = useState({ email: "", password: "" });
+  const { signInUser } = useContext(AuthContext);
+  const redirect = useRouter();
 
   function loginUser(event: React.ChangeEvent<HTMLFormElement>): void {
-    const url = "http://localhost:4000/auth/login";
     event.preventDefault();
-    const body = loginInfo;
-
-    axios
-      .post(url, body)
-      .then((res) => {
-        const response = res.data;
-        const user = {
-          email: response.user.email,
-          token: response.token,
-        };
-        console.log(user);
-      })
-      .catch((err) => {
-        console.log(err.response.status);
-      });
+    signInUser(loginInfo);
+    redirect.push("/");
   }
 
   return (
