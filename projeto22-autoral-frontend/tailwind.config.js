@@ -66,8 +66,10 @@ module.exports = {
           950: "#2c2323",
         },
       },
+      fontFamily: {
+        rajdhani: ["Rajdhani", "sans-serif"],
+      },
     },
-    fontFamily: {},
   },
   plugins: [],
 };

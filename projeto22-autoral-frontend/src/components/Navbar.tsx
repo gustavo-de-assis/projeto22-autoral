@@ -1,29 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getProviders, useSession } from "next-auth/react";
-import { global } from "styled-jsx/css";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { AuthContext } from "@/app/Context/AuthContext";
 
 export default function Navbar() {
-  /*     const [providers, setProviders] = useState<any>(null);
+  const { user, isAuthenticated } = useContext(AuthContext);
 
-    useEffect(()=>{
-        const setProvider = async ()=>{
-            const response = await getProviders();
+  const [userName, setUserName] = useState("");
 
-            setProviders(response);
-        }
-        setProvider();
-    }, []) */
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log("logged!");
+      const firstName = user.name.split(" ")[0];
+      setUserName(firstName);
+    }
+  }, []);
+
   return (
     <>
       <nav className="flex-between w-full fixed top-0 z-10">
         <div className="flex flex-row justify-end w-full bg-san-marino-500 h-6 gap-2 font-rajdhani text-white px-4">
-          <p> Logout </p>
-          <p>|</p>
-          <p> Bem-Vindo Fulano!</p>
+          {isAuthenticated ? (
+            <>
+              <p> Logout </p>
+              <p>|</p>
+              <p> Bem-Vindo {userName}!</p>
+            </>
+          ) : (
+            <>
+              <p> Olá visitante!</p>
+              <Link href={"/login"}>Faça login!</Link>
+            </>
+          )}
         </div>
 
         <div className="flex flex-row w-full bg-blue-zodiac-950 h-16 px-4 items-center justify-between">

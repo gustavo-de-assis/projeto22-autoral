@@ -22,7 +22,7 @@ export default function ProdSelection({ title }: any) {
 
   return (
     <div className=" flex flex-col w-full h-96 justify-center p-6">
-      <h1 className="text-3xl">{title}</h1>
+      <h1 className="text-4xl font-medium">{title}</h1>
       <div className="flex flex-row w-full h-80 bg-botticelli-300 gap-2 rounded justify-evenly items-center">
         {products.map((p, idx) => (
           <div
@@ -36,9 +36,7 @@ export default function ProdSelection({ title }: any) {
                 height={150}
                 alt="Tetelestyle"
               />
-              <h1 className="mt-3 text-sm font-rajdhani text-white align-middle">
-                {p.name}
-              </h1>
+              <h1 className="mt-3 text-sm text-white align-middle">{p.name}</h1>
             </Link>
           </div>
         ))}
