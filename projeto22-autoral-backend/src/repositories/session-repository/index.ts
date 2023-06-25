@@ -2,9 +2,12 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/config";
 import dayjs from "dayjs";
 
-async function create(data: Prisma.sessionsUncheckedCreateInput) {
+async function create(userId: number, token: string) {
   return prisma.sessions.create({
-    data,
+    data: {
+      userId,
+      token,
+    },
   });
 }
 
@@ -17,14 +20,17 @@ async function getSession(userId: number, token: string) {
   });
 }
 
-async function updateSession(userId: number, token: string) {
-  return prisma.sessions.update({
+async function upsertSession(userId: number, token: string) {
+  return prisma.sessions.upsert({
     where: {
       userId,
     },
-    data: {
+    create: {
+      userId,
       token,
-      createdAt: dayjs().valueOf().toLocaleString(),
+    },
+    update: {
+      token,
     },
   });
 }
@@ -32,7 +38,7 @@ async function updateSession(userId: number, token: string) {
 const sessionRepository = {
   create,
   getSession,
-  updateSession,
+  upsertSession,
 };
 
 export default sessionRepository;

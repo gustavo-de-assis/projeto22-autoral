@@ -26,6 +26,28 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState<User | null>(null);
   const isAuthenticated = !!user;
 
+  useEffect(() => {
+    const { "tts.token": token } = parseCookies();
+    if (token) {
+      getUserData(token);
+    }
+  }, []);
+
+  async function getUserData(token: string) {
+    const url = "http://localhost:4000/auth/session";
+    try {
+      const res = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const userData = res.data;
+      setUser(userData);
+    } catch (error) {
+      console.log(error.response.status);
+    }
+  }
+
   async function signInUser({ email, password }: SignInData) {
     const url = "http://localhost:4000/auth/login";
     const body = { email, password };

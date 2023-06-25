@@ -33,10 +33,12 @@ export async function signUp(req: Request, res: Response) {
 
 export async function checkUserSession(req: Request, res: Response) {
   const { token } = req.cookies;
+  console.log(token);
 
+  /* 
   if (!token) {
     return res.sendStatus(httpStatus.UNAUTHORIZED);
-  }
+  } */
 
   try {
     const session = await authService.checkSession(token);

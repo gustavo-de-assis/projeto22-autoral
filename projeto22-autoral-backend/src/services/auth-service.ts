@@ -40,9 +40,11 @@ export async function signIn(params: SignInParams): Promise<SignInResult> {
   }
 
   const token = await createSessionToken(user.id);
+
+  await sessionRepository.upsertSession(user.id, token);
   delete user.password;
 
-  await updateSession(user.id, token);
+  console.log(token);
 
   return {
     user,
@@ -52,18 +54,9 @@ export async function signIn(params: SignInParams): Promise<SignInResult> {
 
 async function createSessionToken(userId: number) {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: 60000, //time in miliseconds or specified like "1h"
+    expiresIn: "1h", //time in miliseconds or specified like "1h"
   });
-  /*  await sessionRepository.create({
-    token,
-    userId,
-  }); */
-
   return token;
-}
-
-async function updateSession(userId: number, token: string) {
-  await sessionRepository.updateSession(userId, token);
 }
 
 export async function checkSession(token: string): Promise<boolean> {
