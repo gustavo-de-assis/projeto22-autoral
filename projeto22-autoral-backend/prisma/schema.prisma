@@ -105,11 +105,11 @@ model users {
   name       String      @db.VarChar(255)
   password   String      @db.VarChar(255)
   created_at DateTime?   @default(now()) @db.Timestamp(6)
-  sessions   sessions[]
+  session    sessions?
   addresses  addresses[]
   carts      carts[]
   orders     orders[]
-  usersInfo  usersInfo[]
+  usersInfo  usersInfo?
 }
 
 model usersInfo {
@@ -117,16 +117,16 @@ model usersInfo {
   cpf          String    @unique @db.VarChar(11)
   image_url    String?   @db.VarChar(255)
   document_url String?   @db.VarChar(255)
-  userId       Int
+  userId       Int       @unique
   user         users     @relation(fields: [userId], references: [id], onDelete: Cascade)
   created_at   DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model sessions {
   id        Int      @id @default(autoincrement())
-  userId    Int
-  user      users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int      @unique
   token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      users    @relation(fields: [userId], references: [id])
 }

@@ -16,12 +16,14 @@ export async function signUp(params: CreateUserParams) {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
+
   const userParams = {
     name,
     email,
     password: hashedPassword,
   } as CreateUserParams;
-  return userRepository.createUser(userParams);
+
+  return await userRepository.createUser(userParams);
 }
 
 export async function signIn(params: SignInParams): Promise<SignInResult> {
@@ -37,22 +39,47 @@ export async function signIn(params: SignInParams): Promise<SignInResult> {
     throw invalidCredentialsError();
   }
 
-  const token = await createSession(user.id);
+  const token = await createSessionToken(user.id);
   delete user.password;
+
+  await updateSession(user.id, token);
+
   return {
     user,
     token,
   };
 }
 
-async function createSession(userId: number) {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET);
-  await sessionRepository.create({
+async function createSessionToken(userId: number) {
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: 60000, //time in miliseconds or specified like "1h"
+  });
+  /*  await sessionRepository.create({
     token,
     userId,
-  });
+  }); */
 
   return token;
+}
+
+async function updateSession(userId: number, token: string) {
+  await sessionRepository.updateSession(userId, token);
+}
+
+export async function checkSession(token: string): Promise<boolean> {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const { userId } = decoded as { userId: number };
+
+    const session = await sessionRepository.getSession(userId, token);
+    if (!session) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export type SignInParams = Pick<users, "email" | "password">;
@@ -66,6 +93,7 @@ type SignInResult = {
 const authService = {
   signIn,
   signUp,
+  checkSession,
 };
 
 export default authService;
