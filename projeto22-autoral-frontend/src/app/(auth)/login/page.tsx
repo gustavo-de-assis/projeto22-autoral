@@ -11,9 +11,10 @@ export default function Login() {
   const { signInUser } = useContext(AuthContext);
   const redirect = useRouter();
 
-  function loginUser(event: React.ChangeEvent<HTMLFormElement>): void {
+  async function loginUser(event: React.ChangeEvent<HTMLFormElement>): void {
     event.preventDefault();
-    signInUser(loginInfo);
+    await signInUser(loginInfo);
+
     redirect.push("/");
   }
 

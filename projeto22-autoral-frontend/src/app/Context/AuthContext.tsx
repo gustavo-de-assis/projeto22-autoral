@@ -31,12 +31,13 @@ export function AuthProvider({ children }) {
     if (token) {
       getUserData(token);
     }
-  }, []);
+  }, [user]);
 
   async function getUserData(token: string) {
-    const url = "http://localhost:4000/auth/session";
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/session`;
     try {
       const res = await axios.get(url, {
+        withCredentials: true,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -49,7 +50,7 @@ export function AuthProvider({ children }) {
   }
 
   async function signInUser({ email, password }: SignInData) {
-    const url = "http://localhost:4000/auth/login";
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
     const body = { email, password };
 
     try {
@@ -58,13 +59,15 @@ export function AuthProvider({ children }) {
       const token = res.data.token;
 
       setUser(userData);
-      console.log(user, token);
 
       setCookie(undefined, "tts.token", token, {
         maxAge: 60 * 60 * 1, //1 hora
       });
+
+      alert("Bem vindo!");
     } catch (err) {
       console.log(err.response.status);
+      alert("Não foi possível fazer login!");
     }
   }
 

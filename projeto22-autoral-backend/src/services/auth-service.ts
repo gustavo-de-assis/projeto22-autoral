@@ -44,8 +44,6 @@ export async function signIn(params: SignInParams): Promise<SignInResult> {
   await sessionRepository.upsertSession(user.id, token);
   delete user.password;
 
-  console.log(token);
-
   return {
     user,
     token,
@@ -62,7 +60,10 @@ async function createSessionToken(userId: number) {
 export async function checkSession(token: string): Promise<boolean> {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("decoded", decoded);
+
     const { userId } = decoded as { userId: number };
+    console.log(userId);
 
     const session = await sessionRepository.getSession(userId, token);
     if (!session) {
