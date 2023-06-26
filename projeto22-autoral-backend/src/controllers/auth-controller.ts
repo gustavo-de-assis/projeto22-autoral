@@ -16,11 +16,14 @@ export async function singIn(req: Request, res: Response) {
 }
 
 export async function signUp(req: Request, res: Response) {
-  const { email, password } = req.body as CreateUserParams;
+  const { name, email, password } = req.body as CreateUserParams;
   try {
-    const result = await authService.signUp({ email, password });
+    const result = await authService.signUp({ name, email, password });
     return res.status(httpStatus.OK).send(result);
   } catch (error) {
+    if (error.name === "ConflictError") {
+      return res.sendStatus(httpStatus.CONFLICT);
+    }
     return res.sendStatus(httpStatus.UNAUTHORIZED);
   }
 }

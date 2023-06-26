@@ -5,17 +5,22 @@ import jwt from "jsonwebtoken";
 import { invalidCredentialsError } from "./errors";
 import sessionRepository from "@/repositories/session-repository";
 import { CreateUserParams } from "@/protocols";
+import { conflictError } from "@/errors/conflict-error";
 
 export async function signUp(params: CreateUserParams) {
-  const { email, password } = params;
+  const { name, email, password } = params;
 
   const userAlreadyExists = await userRepository.findUserByEmail(email);
   if (userAlreadyExists) {
-    throw invalidCredentialsError();
+    throw conflictError();
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const userParams = { email, password: hashedPassword } as CreateUserParams;
+  const userParams = {
+    name,
+    email,
+    password: hashedPassword,
+  } as CreateUserParams;
   return userRepository.createUser(userParams);
 }
 
@@ -51,6 +56,7 @@ async function createSession(userId: number) {
 }
 
 export type SignInParams = Pick<users, "email" | "password">;
+export type SignUpParams = Pick<users, "email" | "name" | "password">;
 
 type SignInResult = {
   user: Pick<users, "id" | "email">;
