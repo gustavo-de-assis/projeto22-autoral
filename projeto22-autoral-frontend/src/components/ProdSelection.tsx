@@ -24,7 +24,7 @@ export default function ProdSelection({ title }: any) {
     <div className=" flex flex-col w-full h-96 justify-center p-6">
       <h1 className="text-4xl font-medium">{title}</h1>
       <div className="flex flex-row w-full h-80 bg-botticelli-300 gap-2 rounded justify-evenly items-center">
-        {products.map((p, idx) => (
+        {products.map((p: any, idx) => (
           <div
             key={idx}
             className="flex flex-col gap-2 h-5/6 w-36 items-center justify-start rounded"

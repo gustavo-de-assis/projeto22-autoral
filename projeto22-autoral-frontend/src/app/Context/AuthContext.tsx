@@ -22,8 +22,8 @@ type AuthContextType = {
 
 export const AuthContext = createContext({} as AuthContextType);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState<User | null>(null);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User>({ name: "", email: "" });
   const isAuthenticated = !!user;
 
   async function signInUser({ email, password }: SignInData) {
@@ -42,7 +42,7 @@ export function AuthProvider({ children }) {
         maxAge: 60 * 60 * 1, //1 hora
       });
     } catch (err) {
-      console.log(err.response.status);
+      console.log(err);
     }
   }
 
