@@ -10,7 +10,7 @@ services:
 
   node:
     container_name: node
-    build: ./back-end
+    build: ./projeto22-autoral-backend
     ports:
       - 4000:4000
     depends_on:
