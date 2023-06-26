@@ -5,4 +5,4 @@ export type ApplicationError = {
   message: string;
 };
 
-export type CreateUserParams = Pick<users, "email" | "password">;
+export type CreateUserParams = Pick<users, "email" | "password" | "name">;
