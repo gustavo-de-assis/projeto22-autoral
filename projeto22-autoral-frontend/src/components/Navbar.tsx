@@ -12,11 +12,10 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log("logged!");
       const firstName = user.name.split(" ")[0];
       setUserName(firstName);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <>

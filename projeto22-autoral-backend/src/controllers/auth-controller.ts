@@ -5,7 +5,6 @@ import { CreateUserParams } from "@/protocols";
 
 export async function singIn(req: Request, res: Response) {
   const { email, password } = req.body as SignInParams;
-  console.log(email, password);
   try {
     const result = await authService.signIn(email, password);
     return res.status(httpStatus.OK).send(result);
@@ -33,13 +32,16 @@ export async function signUp(req: Request, res: Response) {
 }
 
 export async function checkUserSession(req: Request, res: Response) {
-  const { token } = req.cookies;
+  const { "tts.token": token } = req.cookies;
 
   try {
-    console.log("JWT Token", token);
     const session = await authService.checkSession(token);
     if (session) {
-      return res.sendStatus(httpStatus.OK);
+      const user = {
+        name: session.user_information[0].name,
+        email: session.email,
+      };
+      return res.status(httpStatus.OK).send(user);
     } else {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }

@@ -1,11 +1,24 @@
 import { prisma } from "@/config";
 import { CreateUserParams } from "@/protocols";
-import { authentication, user_information } from "@prisma/client";
 
 async function findUserByEmail(email: string) {
   return await prisma.authentication.findUnique({
     where: {
       email,
+    },
+    include: {
+      user_information: true,
+    },
+  });
+}
+
+async function findUserById(id: number) {
+  return await prisma.authentication.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user_information: true,
     },
   });
 }
@@ -34,6 +47,7 @@ async function createLogin(email: string, password: string) {
 
 const userRepository = {
   findUserByEmail,
+  findUserById,
   createUser,
 };
 

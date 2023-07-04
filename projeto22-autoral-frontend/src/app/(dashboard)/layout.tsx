@@ -1,8 +1,11 @@
+"use client";
+
 import Navbar from "@/components/Navbar";
-import { AuthProvider } from "../Context/AuthContext";
-import Image from "next/image";
+import { AuthContext, AuthProvider } from "../Context/AuthContext";
+import { useContext } from "react";
 
 export default function DashBoard({ children }: { children: React.ReactNode }) {
+  const { user } = useContext(AuthContext);
   return (
     <AuthProvider>
       <Navbar />

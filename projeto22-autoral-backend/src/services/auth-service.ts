@@ -7,6 +7,7 @@ import sessionRepository from "@/repositories/session-repository";
 import { CreateUserParams } from "@/protocols";
 import { conflictError } from "@/errors/conflict-error";
 import { notFoundError } from "@/errors/not-found-error";
+import { badRequestError } from "@/errors/bad-request-error";
 
 export async function signUp(params: CreateUserParams) {
   const { name, email, password } = params;
@@ -43,8 +44,14 @@ export async function signIn(email: string, password: string) {
   await sessionRepository.upsertSession(user.id, token);
   delete user.password, user.created_at;
 
+  const result = {
+    id: user.id,
+    email: user.email,
+    name: user.user_information[0].name,
+  };
+
   return {
-    user,
+    result,
     token,
   };
 }
@@ -56,22 +63,22 @@ async function createSessionToken(userId: number) {
   return token;
 }
 
-export async function checkSession(token: string): Promise<boolean> {
+export async function checkSession(token: string) /* : Promise<boolean>  */ {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decoded", decoded);
 
     const { userId } = decoded as { userId: number };
-    console.log(userId);
 
     const session = await sessionRepository.getSession(userId, token);
-    if (!session) {
-      return false;
-    }
 
-    return true;
+    if (!session) {
+      throw notFoundError();
+    } else {
+      const user = await userRepository.findUserById(session.auth_id);
+      return user;
+    }
   } catch (error) {
-    return false;
+    throw badRequestError();
   }
 }
 

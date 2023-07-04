@@ -24,14 +24,14 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const isAuthenticated = !!user;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const { "tts.token": token } = parseCookies();
     if (token) {
       getUserData(token);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   async function getUserData(token: string) {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/session`;
@@ -42,10 +42,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           Authorization: `Bearer ${token}`,
         },
       });
-      const userData = res.data;
-      setUser(userData);
+
+      setUser({ name: res.data.name, email: res.data.email });
+      setIsAuthenticated(true);
     } catch (error) {
-      console.log(error);
+      setIsAuthenticated(false);
     }
   }
 
@@ -55,18 +56,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const res = await axios.post(url, body);
-      const userData = res.data.user;
       const token = res.data.token;
-
-      setUser({ name: userData.name, email: userData.email });
 
       setCookie(undefined, "tts.token", token, {
         maxAge: 60 * 60 * 1, //1 hora
       });
 
+      setUser({ name: res.data.result.name, email: res.data.result.email });
+
       alert("Bem vindo!");
     } catch (err) {
-      console.log(err.response.status);
       alert("Não foi possível fazer login!");
     }
   }
