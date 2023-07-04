@@ -1,5 +1,6 @@
 import {
   checkUserSession,
+  logout,
   signUp,
   singIn,
 } from "@/controllers/auth-controller";
@@ -11,6 +12,7 @@ const authRouter = Router();
 authRouter
   .post("/login", singIn)
   .post("/signup", validateUserMiddleware, signUp)
+  .post("/logout", logout)
   .get("/session", checkUserSession);
 
 export { authRouter };

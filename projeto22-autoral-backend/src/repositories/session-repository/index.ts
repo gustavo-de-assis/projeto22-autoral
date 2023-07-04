@@ -44,10 +44,19 @@ async function upsertSession(authId: number, token: string) {
   }
 }
 
+async function deleteSession(id: number) {
+  await prisma.sessions.delete({
+    where: {
+      id,
+    },
+  });
+}
+
 const sessionRepository = {
   create,
   getSession,
   upsertSession,
+  deleteSession,
 };
 
 export default sessionRepository;

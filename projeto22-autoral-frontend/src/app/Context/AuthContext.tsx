@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { parseCookies, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { createContext, useEffect, useState } from "react";
 
 type User = {
@@ -47,6 +47,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(true);
     } catch (error) {
       setIsAuthenticated(false);
+      setUser(null);
+    }
+  }
+
+  async function logout() {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`;
+    const { "tts.token": token } = parseCookies();
+
+    try {
+      await axios.post(url, { token });
+      destroyCookie(undefined, "tts.token", { path: "/" });
+      setIsAuthenticated(false);
+      setUser(null);
+    } catch (error) {
+      console.log(error.response);
     }
   }
 
@@ -71,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signInUser }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signInUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

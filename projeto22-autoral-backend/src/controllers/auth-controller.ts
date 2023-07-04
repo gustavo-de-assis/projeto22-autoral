@@ -49,3 +49,17 @@ export async function checkUserSession(req: Request, res: Response) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
+
+export async function logout(req: Request, res: Response) {
+  const { token } = req.body;
+
+  try {
+    await authService.deleteSession(token);
+
+    res.clearCookie("tts.token");
+
+    res.sendStatus(httpStatus.OK);
+  } catch (error) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}

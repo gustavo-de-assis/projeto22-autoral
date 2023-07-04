@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AuthContext } from "@/app/Context/AuthContext";
 
 export default function Navbar() {
-  const { user, isAuthenticated } = useContext(AuthContext);
+  const { user, isAuthenticated, logout } = useContext(AuthContext);
 
   const [userName, setUserName] = useState("");
 
@@ -23,7 +23,9 @@ export default function Navbar() {
         <div className="flex flex-row justify-end w-full bg-san-marino-500 h-6 gap-2 font-rajdhani text-white px-4">
           {isAuthenticated ? (
             <>
-              <p> Logout </p>
+              <button onClick={logout} className=" hover:underline">
+                Logout
+              </button>
               <p>|</p>
               <p> Bem-Vindo {userName}!</p>
             </>

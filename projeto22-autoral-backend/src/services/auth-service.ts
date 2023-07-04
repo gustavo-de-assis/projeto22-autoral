@@ -82,6 +82,24 @@ export async function checkSession(token: string) /* : Promise<boolean>  */ {
   }
 }
 
+export async function deleteSession(token: string) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const { userId } = decoded as { userId: number };
+
+    const session = await sessionRepository.getSession(userId, token);
+
+    if (!session) {
+      throw notFoundError();
+    } else {
+      await sessionRepository.deleteSession(session.id);
+    }
+  } catch (err) {
+    throw badRequestError();
+  }
+}
+
 export type SignInParams = Pick<authentication, "email" | "password">;
 export type SignUpParams = Pick<authentication, "email" | "password"> &
   Pick<user_information, "name">;
@@ -95,6 +113,7 @@ const authService = {
   signIn,
   signUp,
   checkSession,
+  deleteSession,
 };
 
 export default authService;
