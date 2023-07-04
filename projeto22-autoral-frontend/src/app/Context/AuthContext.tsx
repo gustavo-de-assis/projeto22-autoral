@@ -22,7 +22,7 @@ type AuthContextType = {
 
 export const AuthContext = createContext({} as AuthContextType);
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const isAuthenticated = !!user;
 
@@ -31,7 +31,7 @@ export function AuthProvider({ children }) {
     if (token) {
       getUserData(token);
     }
-  }, [user]);
+  }, []);
 
   async function getUserData(token: string) {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/session`;
@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
       const userData = res.data;
       setUser(userData);
     } catch (error) {
-      console.log(error.response.status);
+      console.log(error);
     }
   }
 
@@ -58,7 +58,7 @@ export function AuthProvider({ children }) {
       const userData = res.data.user;
       const token = res.data.token;
 
-      setUser(userData);
+      setUser({ name: userData.name, email: userData.email });
 
       setCookie(undefined, "tts.token", token, {
         maxAge: 60 * 60 * 1, //1 hora

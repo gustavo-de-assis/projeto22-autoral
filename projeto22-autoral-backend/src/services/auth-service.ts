@@ -1,11 +1,12 @@
 import userRepository from "@/repositories/user-repository";
-import { users } from "@prisma/client";
+import { authentication, user_information } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { invalidCredentialsError } from "./errors";
 import sessionRepository from "@/repositories/session-repository";
 import { CreateUserParams } from "@/protocols";
 import { conflictError } from "@/errors/conflict-error";
+import { notFoundError } from "@/errors/not-found-error";
 
 export async function signUp(params: CreateUserParams) {
   const { name, email, password } = params;
@@ -26,12 +27,10 @@ export async function signUp(params: CreateUserParams) {
   return await userRepository.createUser(userParams);
 }
 
-export async function signIn(params: SignInParams): Promise<SignInResult> {
-  const { email, password } = params;
-
+export async function signIn(email: string, password: string) {
   const user = await userRepository.findUserByEmail(email);
   if (!user) {
-    throw invalidCredentialsError();
+    throw notFoundError();
   }
 
   const validatePassword = await bcrypt.compare(password, user.password);
@@ -42,7 +41,7 @@ export async function signIn(params: SignInParams): Promise<SignInResult> {
   const token = await createSessionToken(user.id);
 
   await sessionRepository.upsertSession(user.id, token);
-  delete user.password;
+  delete user.password, user.created_at;
 
   return {
     user,
@@ -76,13 +75,14 @@ export async function checkSession(token: string): Promise<boolean> {
   }
 }
 
-export type SignInParams = Pick<users, "email" | "password">;
-export type SignUpParams = Pick<users, "email" | "name" | "password">;
+export type SignInParams = Pick<authentication, "email" | "password">;
+export type SignUpParams = Pick<authentication, "email" | "password"> &
+  Pick<user_information, "name">;
 
-type SignInResult = {
-  user: Pick<users, "id" | "email">;
+/* type SignInResult = {
+  user: Pick<authentication, "email" | "id"> & Pick<user_information, "name">;
   token: string;
-};
+}; */
 
 const authService = {
   signIn,

@@ -9,124 +9,127 @@ datasource db {
 }
 
 model addresses {
-  id          Int       @id @default(autoincrement())
-  user_id     Int?
-  street      String    @db.VarChar(255)
-  city        String    @db.VarChar(255)
-  state       String    @db.VarChar(255)
-  postal_code String    @db.VarChar(255)
-  created_at  DateTime? @default(now()) @db.Timestamp(6)
-  users       users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  orders      orders[]
+  id             Int              @id @default(autoincrement())
+  street         String           @db.VarChar(50)
+  city           String           @db.VarChar(50)
+  state          String           @db.VarChar(50)
+  postal_code    String           @db.VarChar(8)
+  orders         orders[]
+  user_addresses user_addresses[]
 }
 
-model cart_items {
-  id         Int       @id @default(autoincrement())
-  cart_id    Int?
-  product_id Int?
-  quantity   Int
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  carts      carts?    @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model authentication {
+  id               Int                @id @default(autoincrement())
+  email            String             @unique
+  password         String
+  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  sessions         sessions[]
+  user_information user_information[]
 }
 
-model carts {
-  id         Int          @id @default(autoincrement())
-  user_id    Int?
-  created_at DateTime?    @default(now()) @db.Timestamp(6)
-  cart_items cart_items[]
-  users      users?       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model cart {
+  id               Int              @id @default(autoincrement())
+  user_id          Int
+  user_information user_information @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cart_user_id")
+  cart_item        cart_item[]
+}
+
+model cart_item {
+  id                 Int              @id @default(autoincrement())
+  cart_id            Int
+  product_variant_id Int
+  quantity           Int?
+  cart               cart             @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cart_item_cart_id")
+  product_variants   product_variants @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cart_item_product_variant_id")
 }
 
 model categories {
-  id         Int        @id @default(autoincrement())
-  name       String     @db.VarChar(255)
-  created_at DateTime?  @default(now()) @db.Timestamp(6)
-  products   products[]
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
+  product_variants product_variants[]
 }
 
 model colors {
-  id         Int        @id @default(autoincrement())
-  name       String     @db.VarChar(255)
-  created_at DateTime?  @default(now()) @db.Timestamp(6)
-  products   products[]
+  id               Int                @id @default(autoincrement())
+  name             String             @db.VarChar(30)
+  product_variants product_variants[]
 }
 
 model order_items {
-  id         Int       @id @default(autoincrement())
-  order_id   Int?
-  product_id Int?
-  quantity   Int
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  orders     orders?   @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_item_order")
-  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_item_product")
+  id                 Int              @id @default(autoincrement())
+  order_id           Int
+  product_variant_id Int
+  quantity           Int?
+  price              Int?
+  orders             orders           @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_items_order_id")
+  product_variants   product_variants @relation(fields: [product_variant_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_items_product_variant_id")
 }
 
 model orders {
-  id             Int           @id @default(autoincrement())
-  user_id        Int?
-  address_id     Int?
-  payment_method String        @db.VarChar(255)
-  total_amount   Int
-  created_at     DateTime?     @default(now()) @db.Timestamp(6)
-  order_items    order_items[]
-  addresses      addresses?    @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_address")
-  users          users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_user")
+  id               Int              @id @default(autoincrement())
+  user_id          Int
+  address_id       Int
+  created_at       DateTime?        @db.Date
+  total            Int?
+  order_items      order_items[]
+  addresses        addresses        @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_orders_address_id")
+  user_information user_information @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_orders_user_id")
+}
+
+model product_variants {
+  id          Int           @id @default(autoincrement())
+  product_id  Int
+  color_id    Int?
+  size_id     Int?
+  category_id Int?
+  stock       Int?
+  image_url   String
+  cart_item   cart_item[]
+  order_items order_items[]
+  categories  categories?   @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_variants_category_id")
+  colors      colors?       @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_variants_color_id")
+  products    products      @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_variants_product_id")
+  sizes       sizes?        @relation(fields: [size_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_variants_size_id")
 }
 
 model products {
-  id          Int           @id @default(autoincrement())
-  name        String        @db.VarChar(255)
-  price       Int
-  stock       Int
-  color_id    Int?
-  size_id     Int?
-  model_id    Int?
-  category_id Int?
-  image_url   String?       @db.VarChar(255)
-  created_at  DateTime?     @default(now()) @db.Timestamp(6)
-  cart_items  cart_items[]
-  order_items order_items[]
-  categories  categories?   @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_category")
-  colors      colors?       @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_color")
-  sizes       sizes?        @relation(fields: [size_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_size")
-}
-
-model sizes {
-  id         Int        @id @default(autoincrement())
-  name       String     @db.VarChar(255)
-  created_at DateTime?  @default(now()) @db.Timestamp(6)
-  products   products[]
-}
-
-model users {
-  id         Int         @id @default(autoincrement())
-  email      String      @unique @db.VarChar(255)
-  name       String      @db.VarChar(255)
-  password   String      @db.VarChar(255)
-  created_at DateTime?   @default(now()) @db.Timestamp(6)
-  session    sessions[]
-  addresses  addresses[]
-  carts      carts[]
-  orders     orders[]
-  usersInfo  usersInfo[]
-}
-
-model usersInfo {
-  id           Int       @id @default(autoincrement())
-  cpf          String    @unique @db.VarChar(11)
-  image_url    String?   @db.VarChar(255)
-  document_url String?   @db.VarChar(255)
-  userId       Int       @unique
-  user         users     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  id               Int                @id @default(autoincrement())
+  name             String             @db.VarChar(100)
+  price            Int
+  product_variants product_variants[]
 }
 
 model sessions {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             Int            @id @default(autoincrement())
+  auth_id        Int
+  token          String
+  created_at     DateTime?      @db.Timestamp(6)
+  updated_at     DateTime?      @db.Timestamp(6)
+  authentication authentication @relation(fields: [auth_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sessions_auth_id")
+}
+
+model sizes {
+  id               Int                @id @default(autoincrement())
+  name             String             @unique @db.VarChar(3)
+  product_variants product_variants[]
+}
+
+model user_addresses {
+  id               Int              @id @default(autoincrement())
+  user_id          Int
+  address_id       Int
+  addresses        addresses        @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_addresses_address_id")
+  user_information user_information @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_addresses_user_id")
+}
+
+model user_information {
+  id             Int              @id @default(autoincrement())
+  auth_id        Int?
+  image_url      String?
+  cpf            String?          @db.VarChar(11)
+  name           String           @db.VarChar(60)
+  cart           cart[]
+  orders         orders[]
+  user_addresses user_addresses[]
+  authentication authentication?  @relation(fields: [auth_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_information_auth_id")
 }

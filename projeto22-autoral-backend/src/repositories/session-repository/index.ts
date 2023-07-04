@@ -1,38 +1,47 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "@/config";
-import dayjs from "dayjs";
 
-async function create(userId: number, token: string) {
+async function create(auth_id: number, token: string) {
   return prisma.sessions.create({
     data: {
-      userId,
+      auth_id,
       token,
     },
   });
 }
 
-async function getSession(userId: number, token: string) {
+async function getSession(auth_id: number, token: string) {
   return prisma.sessions.findFirst({
     where: {
-      userId,
+      auth_id,
       token,
     },
   });
 }
 
-async function upsertSession(userId: number, token: string) {
-  return prisma.sessions.upsert({
+async function upsertSession(authId: number, token: string) {
+  const existingSession = await prisma.sessions.findFirst({
     where: {
-      userId,
-    },
-    create: {
-      userId,
-      token,
-    },
-    update: {
-      token,
+      auth_id: authId,
     },
   });
+
+  if (existingSession) {
+    return prisma.sessions.updateMany({
+      where: {
+        auth_id: authId,
+      },
+      data: {
+        token: token,
+      },
+    });
+  } else {
+    return prisma.sessions.create({
+      data: {
+        auth_id: authId,
+        token: token,
+      },
+    });
+  }
 }
 
 const sessionRepository = {

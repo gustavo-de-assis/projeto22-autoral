@@ -7,9 +7,10 @@ export async function singIn(req: Request, res: Response) {
   const { email, password } = req.body as SignInParams;
   console.log(email, password);
   try {
-    const result = await authService.signIn({ email, password });
+    const result = await authService.signIn(email, password);
     return res.status(httpStatus.OK).send(result);
   } catch (error) {
+    console.log(error);
     return res.status(httpStatus.UNAUTHORIZED).send({});
   }
 }
