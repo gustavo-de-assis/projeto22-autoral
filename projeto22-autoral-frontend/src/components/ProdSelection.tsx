@@ -12,7 +12,6 @@ export default function ProdSelection({ title }: any) {
     axios
       .get("http://localhost:4000/products")
       .then((res) => {
-        console.log(res.data);
         setProducts(res.data);
       })
       .catch((err) => {

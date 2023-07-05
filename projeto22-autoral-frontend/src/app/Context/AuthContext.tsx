@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { parseCookies, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { createContext, useEffect, useState } from "react";
 
 type User = {
@@ -22,32 +22,71 @@ type AuthContextType = {
 
 export const AuthContext = createContext({} as AuthContextType);
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const isAuthenticated = !!user;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const { "tts.token": token } = parseCookies();
+    if (token) {
+      getUserData(token);
+    }
+  }, [isAuthenticated]);
+
+  async function getUserData(token: string) {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/session`;
+    try {
+      const res = await axios.get(url, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setUser({ name: res.data.name, email: res.data.email });
+      setIsAuthenticated(true);
+    } catch (error) {
+      setIsAuthenticated(false);
+      setUser(null);
+    }
+  }
+
+  async function logout() {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`;
+    const { "tts.token": token } = parseCookies();
+
+    try {
+      await axios.post(url, { token });
+      destroyCookie(undefined, "tts.token", { path: "/" });
+      setIsAuthenticated(false);
+      setUser(null);
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
 
   async function signInUser({ email, password }: SignInData) {
-    const url = "http://localhost:4000/auth/login";
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
     const body = { email, password };
 
     try {
       const res = await axios.post(url, body);
-      const userData = res.data.user;
       const token = res.data.token;
-
-      setUser(userData);
-      console.log(user, token);
 
       setCookie(undefined, "tts.token", token, {
         maxAge: 60 * 60 * 1, //1 hora
       });
+
+      setUser({ name: res.data.result.name, email: res.data.result.email });
+
+      alert("Bem vindo!");
     } catch (err) {
-      console.log(err.response.status);
+      alert("Não foi possível fazer login!");
     }
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signInUser }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signInUser, logout }}>
       {children}
     </AuthContext.Provider>
   );
