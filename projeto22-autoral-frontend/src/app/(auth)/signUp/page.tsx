@@ -45,16 +45,19 @@ export default function SignUp() {
 
   return (
     <div className="flex flex-row bg-hint-of-red-50">
-      <div className="flex flex-col fixed left-0 bg-hint-of-red-50 items-center w-3/4 sm:w-[400px] h-full z-10">
+      <div className="flex flex-col fixed left-0 bg-gradient-to-t from-transparent to-hint-of-red-50 md:bg-hint-of-red-50 items-center w-full md:w-1/2 lg:w-2/5 xl:w-[512px] h-full z-10 ">
         <h1 className="mt-20 text-7xl font-medium">Cadastro</h1>
 
-        <form onSubmit={signUpUser} className="mt-20 mb-10 flex flex-col gap-4">
+        <form
+          onSubmit={signUpUser}
+          className="mt-16 mb-10 flex flex-col gap-4 sm:gap-5 w-2/4 md:w-2/3"
+        >
           <div className=" relative mb-3">
-            <p className="text-sm z-1 bottom-10 absolute px-1">
+            <p className="text-md z-1 bottom-11 sm:-top-3 absolute px-1">
               Seu nome completo
             </p>
             <input
-              className="h-12 rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
+              className="h-14 sm:h-16 w-full rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
               type="text"
               value={signUpInfo.name}
               onChange={(e) => {
@@ -68,9 +71,11 @@ export default function SignUp() {
           </div>
 
           <div className=" relative mb-3">
-            <p className="text-sm z-1 bottom-10 absolute px-1">Email</p>
+            <p className="text-md z-1 bottom-11 sm:-top-3 absolute px-1">
+              Email
+            </p>
             <input
-              className="h-12 rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
+              className="h-14 sm:h-16 w-full rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
               type="email"
               value={signUpInfo.email}
               onChange={(e) => {
@@ -84,9 +89,11 @@ export default function SignUp() {
           </div>
 
           <div className="relative mb-3">
-            <p className="text-sm absolute z-1 bottom-10 px-1">Senha</p>
+            <p className="text-md z-1 bottom-11 sm:-top-3 absolute px-1">
+              Senha
+            </p>
             <input
-              className="h-12 rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
+              className="h-14 sm:h-16 w-full rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
               type="password"
               value={signUpInfo.password}
               onChange={(e) => {
@@ -100,11 +107,11 @@ export default function SignUp() {
           </div>
 
           <div className="relative">
-            <p className="text-sm absolute z-1 bottom-10 px-1">
+            <p className="text-md z-1 bottom-11 sm:-top-3 absolute px-1">
               Repita sua senha
             </p>
             <input
-              className="h-12 rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
+              className="h-14 sm:h-16 w-full rounded bg-botticelli-100 px-3 outline-none focus:bg-san-marino-200"
               type="password"
               value={signUpInfo.confirmPassword}
               onChange={(e) => {
@@ -119,7 +126,7 @@ export default function SignUp() {
 
           <button
             type="submit"
-            className="h-12 rounded bg-san-marino-500 text-hint-of-red-50 font-semibold text-3xl hover:bg-san-marino-600 mt-10"
+            className="h-12 sm:h-14 rounded bg-san-marino-500 text-hint-of-red-50 font-semibold text-3xl hover:bg-san-marino-600 mt-8"
           >
             CADASTRAR
           </button>

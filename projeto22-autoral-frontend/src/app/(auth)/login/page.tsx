@@ -11,7 +11,9 @@ export default function Login() {
   const { signInUser } = useContext(AuthContext);
   const redirect = useRouter();
 
-  async function loginUser(event: React.ChangeEvent<HTMLFormElement>): void {
+  async function loginUser(
+    event: React.ChangeEvent<HTMLFormElement>
+  ): Promise<void> {
     event.preventDefault();
     await signInUser(loginInfo);
 
