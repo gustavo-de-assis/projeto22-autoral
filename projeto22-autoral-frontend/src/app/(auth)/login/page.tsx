@@ -30,7 +30,7 @@ export default function Login() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-zodiac-950"></div>
       </div>
 
-      <div className="flex flex-col fixed right-0 bg-gradient-to-t from-transparent to-hint-of-red-50 md:bg-hint-of-red-50 items-center w-full md:w-1/2 lg:w-2/5 h-full z-10 ">
+      <div className="flex flex-col fixed right-0 bg-gradient-to-t from-transparent to-hint-of-red-50 md:bg-hint-of-red-50 items-center w-full md:w-1/2 lg:w-2/5 xl:w-[512px] h-full z-10 ">
         <h1 className="mt-20 text-7xl sm:text-8xl md:text-7xl font-medium">
           Login
         </h1>
