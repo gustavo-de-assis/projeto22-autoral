@@ -131,9 +131,9 @@ export default function SignUp() {
             CADASTRAR
           </button>
         </form>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 text-lg">
           <p>Já possui conta?</p>
-          <a href="/login" className="hover:underline">
+          <a href="/login" className="hover:underline font-medium">
             Faça Login!
           </a>
         </div>
